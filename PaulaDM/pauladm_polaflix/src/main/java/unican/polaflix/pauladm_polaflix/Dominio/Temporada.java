@@ -2,21 +2,41 @@ package unican.polaflix.pauladm_polaflix.Dominio;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+
+@IdClass(TemporadaId.class)
+@Entity
 public class Temporada {
 
-    private int numero;
+    @Id
+    private int numeroTemporada;
 
+    @Id
+    private int numeroSerie;
+
+    @OneToMany(mappedBy = "numeroTemporada", cascade = CascadeType.REMOVE)
     private List<Capitulo> capitulos;
 
+    @ManyToOne
     private Serie serie;
 
     public Temporada (Serie serie, int numero) {
         this.serie = serie;
-        this.numero = numero;
+        this.numeroSerie = serie.getId();
+        this.numeroTemporada = numero;
     }
 
-    public int getNumero () {
-        return numero;
+    public void setNumeroTemporada (int numero) {
+        this.numeroTemporada = numero;
+    }
+
+    public int getNumeroTemporada () {
+        return numeroTemporada;
     }
 
     public void setCapitulos (List<Capitulo> capitulos) {
@@ -27,6 +47,11 @@ public class Temporada {
         return capitulos;
     }
 
+    public void setSerie (Serie serie) {
+        this.serie = serie;
+        this.numeroSerie = serie.getId();
+    }
+
     public Serie getSerie () {
         return serie;
     }
@@ -35,7 +60,7 @@ public class Temporada {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + numero + ((serie == null) ? 0 : serie.hashCode());
+        result = prime * result + numeroTemporada + ((serie == null) ? 0 : serie.hashCode());
         return result;
     }
 
@@ -43,7 +68,7 @@ public class Temporada {
     public boolean equals (Object obj) {
         Temporada t = (Temporada) obj;
         //identificadores iguales
-        if (this.numero == t.getNumero()
+        if (this.numeroTemporada == t.getNumeroTemporada()
                 && this.serie.equals(t.getSerie())) {
             return true;
         }

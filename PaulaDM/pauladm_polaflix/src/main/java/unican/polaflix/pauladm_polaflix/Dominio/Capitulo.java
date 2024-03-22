@@ -1,8 +1,22 @@
 package unican.polaflix.pauladm_polaflix.Dominio;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.ManyToOne;
+
+@IdClass(CapituloId.class)
+@Entity
 public class Capitulo {
 
-    private int numero;
+    @Id
+    private int numeroCapitulo;
+
+    @Id
+    private int numeroTemporada;
+
+    @Id
+    private int numeroSerie;
 
     private String nombre;
 
@@ -10,15 +24,22 @@ public class Capitulo {
 
     private String enlace;
 
+    @ManyToOne
     private Temporada temporada;
 
     public Capitulo (Temporada temporada, int numero) {
+        this.numeroSerie = temporada.getSerie().getId();
+        this.numeroTemporada = temporada.getNumeroTemporada();
         this.temporada = temporada;
-        this.numero = numero;
+        this.numeroCapitulo = numero;
     }
 
-    public int getNumero () {
-        return numero;
+    public void setNumeroCapitulo (int numero) {
+        this.numeroCapitulo = numero;
+    }
+
+    public int getNumeroCapitulo () {
+        return numeroCapitulo;
     }
 
     public void setNombre (String nombre) {
@@ -45,6 +66,12 @@ public class Capitulo {
         return enlace;
     }
 
+    public void setTemporada (Temporada temporada) {
+        this.numeroSerie = temporada.getSerie().getId();
+        this.numeroTemporada = temporada.getNumeroTemporada();
+        this.temporada = temporada;
+    }
+
     public Temporada getTemporada () {
         return temporada;
     }
@@ -53,7 +80,7 @@ public class Capitulo {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + numero + ((temporada == null) ? 0 : temporada.hashCode());
+        result = prime * result + numeroCapitulo + ((temporada == null) ? 0 : temporada.hashCode());
         return result;
     }
 
@@ -62,7 +89,7 @@ public class Capitulo {
         Capitulo c = (Capitulo) obj;
         //identificadores iguales
         if (this.temporada.equals(c.getTemporada())
-                && this.numero == c.getNumero()) {
+                && this.numeroCapitulo == c.getNumeroCapitulo()) {
             return true;
         }
         return false;

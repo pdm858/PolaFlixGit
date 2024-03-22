@@ -3,25 +3,50 @@ package unican.polaflix.pauladm_polaflix.Dominio;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+
+@IdClass(FacturaId.class)
+@Entity
 public class Factura {
 
+    @ManyToOne
     private Usuario usuario;
 
+    @Id
+    private String nombreUsuario;
+
+    @Id
     private Date fecha;
 
+    @ManyToOne
     private TipoFactura tipo;
 
     private double importe;
 
+    @OneToMany(mappedBy = "numeroCapitulo", fetch = FetchType.LAZY)
     private List<VisualizacionCapitulo> capitulos;
 
     public Factura (Usuario usuario, Date fecha) {
         this.usuario = usuario;
+        this.nombreUsuario = usuario.getNombreUsuario();
         this.fecha = fecha;
+    }
+
+    public void setUsuario (Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public Usuario getUsuario () {
         return usuario;
+    }
+
+    public void setFecha (Date fecha) {
+        this.fecha = fecha;
     }
 
     public Date getFecha () {

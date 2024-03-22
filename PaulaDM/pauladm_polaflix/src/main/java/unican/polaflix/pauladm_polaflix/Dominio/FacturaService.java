@@ -1,10 +1,14 @@
 package unican.polaflix.pauladm_polaflix.Dominio;
 
 import java.util.Date;
-//import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class FacturaService {
     
+    @Autowired
+    public UsuarioRepository ur;
+
     public FacturaService () {}
 
     public void calcularFactura (Date fecha) {

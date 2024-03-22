@@ -1,7 +1,15 @@
 package unican.polaflix.pauladm_polaflix.Dominio;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Persona {
 
+    @Id
+    @GeneratedValue (strategy = GenerationType.AUTO)
     private int id;
     
     private String nombre;

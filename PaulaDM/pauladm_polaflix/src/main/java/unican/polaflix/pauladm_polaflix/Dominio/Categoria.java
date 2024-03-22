@@ -1,12 +1,21 @@
 package unican.polaflix.pauladm_polaflix.Dominio;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Categoria {
 
+    @Id
     private String nombre;
 
     private double precio;
 
     public Categoria (String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setNombre (String nombre) {
         this.nombre = nombre;
     }
 

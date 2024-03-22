@@ -3,27 +3,46 @@ package unican.polaflix.pauladm_polaflix.Dominio;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+
+@Entity
 public class Usuario {
 
+    @Id
     private String nombreUsuario;
 
     private String contrasenha;
 
     private String iban;
 
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Serie> empezadas;
 
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Serie> pendientes;
 
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Serie> terminadas;
 
+    @OneToOne
     private TipoFactura tipoFactura;
 
+    @OneToMany(mappedBy = "nombreUsuario", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Factura> facturas;
 
+    @OneToMany(mappedBy = "nombreUsuario", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<VisualizacionCapitulo> capitulosVisualizados;
 
     public Usuario (String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
+    }
+
+    public void setNombreUsuario (String nombreUsuario) {
         this.nombreUsuario = nombreUsuario;
     }
 
@@ -137,6 +156,17 @@ public class Usuario {
         //TODO: abrir interfaz de la serie por temporada de obtener ultimo y consultar todos los anteriores a ese
     }
 
+    public void verCapitulo (Capitulo capitulo) {
+        //se accede desde la interfaz que se abre en verSerie
+        capitulo.getEnlace();
+        Temporada temporada = capitulo.getTemporada();
+        Serie serie = temporada.getSerie();
+        agregarCapituloVisto(capitulo, temporada, serie);
+        if (capitulo.equals(obtenerUltimo(serie))) {
+            terminarSerie(serie);
+        }
+    }
+
     public void agregarNuevaSerie (Serie serie) {
         pendientes.add(serie);
     }
@@ -157,7 +187,8 @@ public class Usuario {
                 if (v.getSerie().equals(serie)) {
                     Capitulo c = v.getCapitulo();
                     //perteneciendo a la misma serie el ultimo capitulo sera el de mayor temporada y numero de entre los vistos
-                    if (c.getTemporada().getNumero() > capitulo.getTemporada().getNumero() & c.getNumero() > capitulo.getNumero()) {
+                    if (c.getTemporada().getNumeroTemporada() > capitulo.getTemporada().getNumeroTemporada() 
+                            && c.getNumeroCapitulo() > capitulo.getNumeroCapitulo()) {
                         capitulo = c;
                     }
                 }
